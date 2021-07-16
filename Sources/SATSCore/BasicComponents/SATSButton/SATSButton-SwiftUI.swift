@@ -30,24 +30,11 @@ private struct SATSButtonSwiftUIStyle: ButtonStyle {
     }
 
     func makeBody(configuration: Configuration) -> some View {
-        Group {
-            if isLoading {
-                SimpleRepresentable<RoundLoadingView> { loadingView in
-                    loadingView.startAnimating()
-                }
-                .frame(width: 20, height: 20, alignment: .center)
-            } else {
-                if #available(iOS 14.0, *) {
-                    configuration
-                        .label
-                        .satsFont(.button, weight: .medium)
-                        .textCase(.uppercase)
-                } else {
-                    configuration
-                        .label
-                        .satsFont(.button, weight: .medium)
-                }
-            }
+        ZStack {
+            buttonContent(for: configuration)
+                .opacity(isLoading ? 0.0 : 1.0)
+            spinner
+                .opacity(isLoading ? 1.0 : 0.0)
         }
         .padding(.vertical, size.verticalPadding)
         .padding(.horizontal, size.horizontalPadding)
@@ -56,7 +43,30 @@ private struct SATSButtonSwiftUIStyle: ButtonStyle {
         })
         .background(backgroundColor(for: configuration))
         .foregroundColor(textColor(for: configuration))
-        .cornerRadius(size.cornerRadius)
+        .clipShape(Capsule())
+    }
+
+    // MARK: Subviews
+
+    @ViewBuilder
+    func buttonContent(for configuration: Configuration) -> some View {
+        if #available(iOS 14.0, *) {
+            configuration
+                .label
+                .satsFont(.button, weight: .medium)
+                .textCase(.uppercase)
+        } else {
+            configuration
+                .label
+                .satsFont(.button, weight: .medium)
+        }
+    }
+
+    var spinner: some View {
+        SimpleRepresentable<RoundLoadingView> { loadingView in
+            loadingView.startAnimating()
+        }
+        .frame(width: 20, height: 20, alignment: .center)
     }
 
     // MARK: Private methods

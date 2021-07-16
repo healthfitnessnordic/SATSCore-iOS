@@ -40,11 +40,6 @@ extension SATSButton.Size: Hashable {
 extension SATSButton.Size {
     var verticalPadding: CGFloat { contentEdgeInsets.top }
     var horizontalPadding: CGFloat { contentEdgeInsets.left }
-
-    // Temporary solution
-    var cornerRadius: CGFloat {
-        self == .large ? 32 : 24
-    }
 }
 
 // MARK: - Default Sizes
